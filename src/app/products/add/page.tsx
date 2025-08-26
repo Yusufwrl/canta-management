@@ -93,7 +93,22 @@ export default function AddProductPage() {
   }
 
   const updateForm = (field: keyof ProductForm, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
+    setForm(prev => {
+      const updated = { ...prev, [field]: value }
+      
+      // Alış fiyatı değiştiğinde önerilen fiyatı otomatik hesapla (%80 fazlası)
+      if (field === 'purchasePrice' && value) {
+        const purchasePrice = parseFloat(value)
+        if (!isNaN(purchasePrice) && purchasePrice > 0) {
+          const suggestedPrice = (purchasePrice * 1.8).toFixed(2) // %80 fazlası
+          updated.suggestedSalePrice = suggestedPrice
+        } else {
+          updated.suggestedSalePrice = ''
+        }
+      }
+      
+      return updated
+    })
   }
 
   return (
@@ -243,15 +258,16 @@ export default function AddProductPage() {
             <div>
               <label className="block text-sm font-medium text-gray-300">
                 Önerilen Fiyat (₺)
+                <span className="text-xs text-gray-400 ml-2">(Alış fiyatının %80 fazlası)</span>
               </label>
               <input
                 type="number"
                 step="0.01"
                 min="0"
                 value={form.suggestedSalePrice}
-                onChange={(e) => updateForm('suggestedSalePrice', e.target.value)}
-                className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border"
-                placeholder="0.00"
+                readOnly
+                className="mt-1 block w-full rounded-md bg-gray-600 border-gray-500 text-gray-300 shadow-sm px-3 py-2 border cursor-not-allowed"
+                placeholder="Alış fiyatı girin..."
               />
             </div>
           </div>
@@ -265,6 +281,19 @@ export default function AddProductPage() {
               </p>
               <p className="text-sm text-blue-300">
                 Kar: {(parseFloat(form.salePrice) - parseFloat(form.purchasePrice)).toLocaleString('tr-TR')} ₺
+              </p>
+            </div>
+          )}
+
+          {/* Önerilen Fiyat Bilgisi */}
+          {form.purchasePrice && form.suggestedSalePrice && (
+            <div className="mt-4 p-4 bg-green-900/20 rounded-lg border border-green-700">
+              <h3 className="text-sm font-medium text-green-300">Önerilen Fiyat Bilgisi</h3>
+              <p className="text-lg font-bold text-green-400">
+                Önerilen: {parseFloat(form.suggestedSalePrice).toLocaleString('tr-TR')} ₺
+              </p>
+              <p className="text-sm text-green-300">
+                %80 kar marjı ile hesaplanmıştır
               </p>
             </div>
           )}
