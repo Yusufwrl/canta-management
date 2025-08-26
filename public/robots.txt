@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://DOMAIN_NAME/sitemap.xml
+Sitemap: https://yusufcanta.com/sitemap.xml
 
 # Disallow admin pages
 Disallow: /api/
