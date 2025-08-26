@@ -1,0 +1,55 @@
+// VPS için MySQL schema
+// Bu dosya VPS kurulumunda kullanılacak
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                  String   @id @default(cuid())
+  code                String   @unique
+  name                String
+  brand               String
+  color               String
+  category            String
+  model               String
+  description         String?
+  purchasePrice       Float
+  salePrice           Float
+  suggestedSalePrice  Float?
+  inStock             Boolean  @default(true)
+  images              String?  // JSON array of image URLs
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("products")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  productCount Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Transaction {
+  id          String      @id @default(cuid())
+  type        String      // 'sale' | 'purchase' | 'return'
+  productId   String
+  quantity    Int
+  unitPrice   Float
+  totalPrice  Float
+  description String?
+  createdAt   DateTime    @default(now())
+
+  @@map("transactions")
+}

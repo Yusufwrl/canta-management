@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+:root {
+  --background: #111827;
+  --foreground: #f9fafb;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Dark tema her zaman aktif */
+html, body {
+  background: #111827 !important;
+  color: #f9fafb !important;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Input ve form elemanları için dark stil */
+input, select, textarea {
+  background: #374151 !important;
+  color: #f9fafb !important;
+  border-color: #4b5563 !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 1px #3b82f6 !important;
+}
+
+/* Beyaz arka planları dark yap */
+.bg-white {
+  background: #1f2937 !important;
+}
+
+.bg-gray-100 {
+  background: #111827 !important;
+}
+
+.bg-gray-50 {
+  background: #1f2937 !important;
+}
+
+/* Metin renklerini ayarla */
+.text-gray-900 {
+  color: #f9fafb !important;
+}
+
+.text-gray-600 {
+  color: #d1d5db !important;
+}
+
+.text-gray-700 {
+  color: #e5e7eb !important;
+}
+
+/* Border renklerini ayarla */
+.border-gray-300 {
+  border-color: #4b5563 !important;
+}
+
+.shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #111827;
+    --foreground: #f9fafb;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}

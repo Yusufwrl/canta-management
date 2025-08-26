@@ -1,0 +1,61 @@
+# 📋 TURHOST UPLOAD LİSTESİ
+
+## 🚀 Yüklenecek Dosyalar (Sırayla)
+
+### 1. Ana Dosyalar
+- ✅ package.json
+- ✅ package-lock.json  
+- ✅ next.config.ts
+- ✅ .env.production (bunu .env olarak yükle)
+
+### 2. Klasörler
+- ✅ .next/ (tüm klasör - en önemli!)
+- ✅ public/ (resimler vs.)
+- ✅ src/ (kaynak kodlar)
+- ✅ prisma/ (veritabanı şeması)
+
+### 3. Config Dosyalar
+- ✅ tailwind.config.js
+- ✅ tsconfig.json
+- ✅ postcss.config.mjs
+- ✅ eslint.config.mjs
+
+## 🎯 Turhost cPanel Adımları
+
+### Adım 1: cPanel'e Giriş
+1. Turhost hesabından cPanel'e gir
+2. File Manager'ı aç
+3. public_html klasörüne git
+
+### Adım 2: Dosya Yükleme
+1. "Upload" butonuna tıkla
+2. Yukarıdaki dosyaları/klasörleri seç
+3. Yükleme tamamlanana kadar bekle
+
+### Adım 3: Node.js Ayarları
+1. cPanel'de "Node.js" sekmesine git
+2. "Create Application" tıkla
+3. Ayarlar:
+   - Node.js Version: 18+
+   - Application Root: public_html
+   - Application URL: yourdomain.com
+   - Startup File: server.js
+
+### Adım 4: Database Kurulumu
+1. "PostgreSQL Databases" aç
+2. Database oluştur: canta_management
+3. Kullanıcı oluştur ve şifre belirle
+4. .env dosyasında DATABASE_URL güncelle
+
+## 📞 İhtiyaç Halinde
+- Turhost Destek: 0850 532 1 532
+- WhatsApp: +90 850 532 1 532
+- Live Chat: turhost.com
+
+## ⏰ Tahmini Süre
+- Dosya yükleme: 10-15 dakika
+- Node.js kurulum: 5 dakika
+- Database setup: 5 dakika
+- **Toplam**: ~25 dakika
+
+Site hazır olacak! 🎉

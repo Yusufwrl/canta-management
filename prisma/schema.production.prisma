@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                  String   @id @default(cuid())
+  code                String   @unique // Ürün kodu (001, 002, etc.)
+  name                String
+  brand               String
+  color               String
+  category            String   // 'sirt-cantasi' | 'okul-cantasi' | 'el-cantasi' | 'laptop-cantasi' | 'diger'
+  model               String
+  description         String?
+  purchasePrice       Float    // Alış fiyatı
+  salePrice           Float    // Satış fiyatı
+  suggestedSalePrice  Float?   // Önerilen satış fiyatı
+  images              String?  // Resim dosya yolları (JSON string olarak)
+  inStock             Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  // İlişkiler
+  transactions        Transaction[]
+  
+  @@map("products")
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  type        String   // 'gelir' | 'gider'
+  amount      Float
+  description String
+  category    String?
+  productId   String?
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  
+  // İlişkiler
+  product     Product? @relation(fields: [productId], references: [id])
+  
+  @@map("transactions")
+}
+
+model Category {
+  id           String @id @default(cuid())
+  name         String @unique
+  description  String?
+  productCount Int    @default(0)
+  
+  @@map("categories")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("users")
+}
