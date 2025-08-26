@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Upload, X } from 'lucide-react'
 import { useApp } from '@/contexts/AppContext'
@@ -19,7 +19,7 @@ interface ProductForm {
 
 export default function AddProductPage() {
   const router = useRouter()
-  const { categories } = useApp()
+  const { categories, refreshCategories } = useApp()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [images, setImages] = useState<File[]>([])
   const [form, setForm] = useState<ProductForm>({
@@ -33,6 +33,11 @@ export default function AddProductPage() {
     salePrice: '',
     suggestedSalePrice: ''
   })
+
+  // Sayfa yüklendiğinde kategorileri güncelle
+  useEffect(() => {
+    refreshCategories()
+  }, [refreshCategories])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
@@ -181,12 +186,6 @@ export default function AddProductPage() {
                     {category.name}
                   </option>
                 ))}
-                <option value="lux-canta">Lüks Çanta</option>
-                <option value="spor-canta">Spor Çantası</option>
-                <option value="el-cantasi">El Çantası</option>
-                <option value="sirt-cantasi">Sırt Çantası</option>
-                <option value="laptop-cantasi">Laptop Çantası</option>
-                <option value="diger">Diğer</option>
               </select>
             </div>
 
