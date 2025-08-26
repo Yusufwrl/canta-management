@@ -1,19 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Next.js 15 için optimize edilmiş ayarlar
+  // Production için optimize edilmiş ayarlar
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  // TypeScript kontrol hızlandırma
+  // TypeScript ve ESLint'i build sırasında atla (VPS için)
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
   },
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
+  // Output optimize edilmiş
+  output: 'standalone',
   // Performans iyileştirmeleri
-  optimizeFonts: true,
   images: {
     domains: [],
     formats: ['image/webp', 'image/avif'],

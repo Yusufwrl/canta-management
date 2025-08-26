@@ -9,7 +9,7 @@ import { useApp } from '@/contexts/AppContext'
 export default function EditProductPage() {
   const router = useRouter()
   const params = useParams()
-  const { products, updateProduct, refreshProducts } = useApp()
+  const { products, updateProduct, refreshProducts, categories } = useApp()
   
   const productId = params.id as string
   const product = products.find(p => p.id === productId)
@@ -231,6 +231,11 @@ export default function EditProductPage() {
                 className="block w-full rounded-md bg-gray-700 border-gray-600 text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border"
               >
                 <option value="">Kategori seçin</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
                 <option value="lux-canta">Lüks Çanta</option>
                 <option value="spor-canta">Spor Çantası</option>
                 <option value="el-cantasi">El Çantası</option>

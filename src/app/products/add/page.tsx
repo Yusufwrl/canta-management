@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Upload, X } from 'lucide-react'
+import { useApp } from '@/contexts/AppContext'
 
 interface ProductForm {
   name: string
@@ -18,6 +19,7 @@ interface ProductForm {
 
 export default function AddProductPage() {
   const router = useRouter()
+  const { categories } = useApp()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [images, setImages] = useState<File[]>([])
   const [form, setForm] = useState<ProductForm>({
@@ -159,6 +161,11 @@ export default function AddProductPage() {
                 className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border"
               >
                 <option value="">Kategori Seçin</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
                 <option value="lux-canta">Lüks Çanta</option>
                 <option value="spor-canta">Spor Çantası</option>
                 <option value="el-cantasi">El Çantası</option>

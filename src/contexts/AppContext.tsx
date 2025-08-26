@@ -42,7 +42,7 @@ interface AppContextType {
   // Products
   products: Product[]
   setProducts: (products: Product[]) => void
-  addProduct: (product: Product) => void
+  addProduct: (product: Omit<Product, 'id'>) => Promise<Product>
   updateProduct: (id: string, product: Partial<Product>) => void
   deleteProduct: (id: string) => void
   refreshProducts: () => Promise<void>
@@ -50,7 +50,7 @@ interface AppContextType {
   // Transactions
   transactions: Transaction[]
   setTransactions: (transactions: Transaction[]) => void
-  addTransaction: (transaction: Transaction) => void
+  addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<Transaction>
   refreshTransactions: () => Promise<void>
   
   // Categories
@@ -75,14 +75,73 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [products, setProducts] = useState<Product[]>([])
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
+  // LocalStorage'dan veri yükle
+  const [products, setProducts] = useState<Product[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('canta-products')
+      return saved ? JSON.parse(saved) : []
+    }
+    return []
+  })
+  
+  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('canta-transactions')
+      return saved ? JSON.parse(saved) : []
+    }
+    return []
+  })
+  
+  const [categories, setCategories] = useState<Category[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('canta-categories')
+      return saved ? JSON.parse(saved) : []
+    }
+    return []
+  })
+  
   const [isLoading, setIsLoading] = useState(false)
 
+  // LocalStorage'a kaydet
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('canta-products', JSON.stringify(products))
+    }
+  }, [products])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('canta-transactions', JSON.stringify(transactions))
+    }
+  }, [transactions])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('canta-categories', JSON.stringify(categories))
+    }
+  }, [categories])
+
   // Products functions
-  const addProduct = (product: Product) => {
-    setProducts(prev => [product, ...prev])
+  const addProduct = async (product: Omit<Product, 'id'>) => {
+    try {
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+      })
+      
+      if (response.ok) {
+        const newProduct = await response.json()
+        setProducts(prev => [newProduct, ...prev])
+        return newProduct
+      } else {
+        throw new Error('Ürün eklenemedi')
+      }
+    } catch (error) {
+      console.error('Add product error:', error)
+      alert('Ürün eklenirken hata oluştu')
+      throw error
+    }
   }
 
   const updateProduct = (id: string, updatedProduct: Partial<Product>) => {
@@ -115,6 +174,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (response.ok) {
         const data = await response.json()
         setProducts(data)
+        // API'den gelen veriyi localStorage'a da kaydet
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('canta-products', JSON.stringify(data))
+        }
       }
     } catch (error) {
       console.error('Products yüklenirken hata:', error)
@@ -124,8 +187,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   // Transactions functions
-  const addTransaction = (transaction: Transaction) => {
-    setTransactions(prev => [transaction, ...prev])
+  const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
+    try {
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(transaction)
+      })
+      
+      if (response.ok) {
+        const newTransaction = await response.json()
+        setTransactions(prev => [newTransaction, ...prev])
+        return newTransaction
+      } else {
+        throw new Error('İşlem eklenemedi')
+      }
+    } catch (error) {
+      console.error('Add transaction error:', error)
+      alert('İşlem eklenirken hata oluştu')
+      throw error
+    }
   }
 
   const refreshTransactions = async () => {
@@ -134,6 +215,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (response.ok) {
         const data = await response.json()
         setTransactions(data)
+        // API'den gelen veriyi localStorage'a da kaydet
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('canta-transactions', JSON.stringify(data))
+        }
       }
     } catch (error) {
       console.error('Transactions yüklenirken hata:', error)
@@ -147,6 +232,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (response.ok) {
         const data = await response.json()
         setCategories(data)
+        // API'den gelen veriyi localStorage'a da kaydet
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('canta-categories', JSON.stringify(data))
+        }
       }
     } catch (error) {
       console.error('Categories yüklenirken hata:', error)
@@ -182,10 +271,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
   const monthlyIncome = transactions
-    .filter(t => t.type === 'income' && new Date(t.date) >= thirtyDaysAgo)
+    .filter(t => (t.type === 'income' || t.type === 'gelir') && new Date(t.date) >= thirtyDaysAgo)
     .reduce((sum, t) => sum + t.amount, 0)
 
-  // İlk yükleme
+  // İlk yükleme - her zaman API'den fresh data çek
   useEffect(() => {
     refreshProducts()
     refreshTransactions()

@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     
     const transaction = await prisma.transaction.create({
       data: {
-        type: body.type,
+        type: body.type === 'income' ? 'gelir' : 'gider', // Veritabanında Türkçe tipleri kullan
         amount: parseFloat(body.amount),
         description: body.description,
         category: body.category,

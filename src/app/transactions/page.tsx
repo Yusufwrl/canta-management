@@ -5,7 +5,7 @@ import { useApp } from '@/contexts/AppContext'
 import { Plus, Filter, TrendingUp, TrendingDown } from 'lucide-react'
 
 export default function TransactionsPage() {
-  const { transactions, addTransaction, monthlyIncome } = useApp()
+  const { transactions, addTransaction, monthlyIncome, products } = useApp()
   const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all')
   const [showAddForm, setShowAddForm] = useState(false)
   const [newTransaction, setNewTransaction] = useState({
@@ -18,15 +18,17 @@ export default function TransactionsPage() {
 
   const filteredTransactions = transactions.filter(transaction => {
     if (filterType === 'all') return true
-    return transaction.type === filterType
+    if (filterType === 'income') return transaction.type === 'income' || transaction.type === 'gelir'
+    if (filterType === 'expense') return transaction.type === 'expense' || transaction.type === 'gider'
+    return false
   })
 
   const totalIncome = transactions
-    .filter(t => t.type === 'income')
+    .filter(t => t.type === 'income' || t.type === 'gelir')
     .reduce((sum, t) => sum + t.amount, 0)
 
   const totalExpense = transactions
-    .filter(t => t.type === 'expense')
+    .filter(t => t.type === 'expense' || t.type === 'gider')
     .reduce((sum, t) => sum + t.amount, 0)
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -148,7 +150,34 @@ export default function TransactionsPage() {
               />
             </div>
             
-            <div className="sm:col-span-2 flex justify-end space-x-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Ürün (Opsiyonel)</label>
+              <select
+                value={newTransaction.productId}
+                onChange={(e) => setNewTransaction({...newTransaction, productId: e.target.value})}
+                className="w-full rounded-md bg-gray-700 border-gray-600 text-gray-100 px-3 py-2 border"
+              >
+                <option value="">Ürün Seçin</option>
+                {products.map(product => (
+                  <option key={product.id} value={product.id}>
+                    {product.code} - {product.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Kategori</label>
+              <input
+                type="text"
+                value={newTransaction.category}
+                onChange={(e) => setNewTransaction({...newTransaction, category: e.target.value})}
+                className="w-full rounded-md bg-gray-700 border-gray-600 text-gray-100 px-3 py-2 border"
+                placeholder="İşlem kategorisi"
+              />
+            </div>
+            
+            <div className="flex justify-end space-x-3">
               <button
                 type="button"
                 onClick={() => setShowAddForm(false)}
@@ -209,6 +238,7 @@ export default function TransactionsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Tarih</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Tür</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Açıklama</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Ürün</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Tutar</th>
               </tr>
             </thead>
@@ -220,17 +250,26 @@ export default function TransactionsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      transaction.type === 'income' 
+                      (transaction.type === 'income' || transaction.type === 'gelir')
                         ? 'bg-green-900 text-green-200' 
                         : 'bg-red-900 text-red-200'
                     }`}>
-                      {transaction.type === 'income' ? 'Gelir' : 'Gider'}
+                      {(transaction.type === 'income' || transaction.type === 'gelir') ? 'Gelir' : 'Gider'}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-300">{transaction.description}</td>
+                  <td className="px-6 py-4 text-sm text-gray-300">
+                    {transaction.product ? (
+                      <span className="text-blue-400">
+                        {transaction.product.code} - {transaction.product.name}
+                      </span>
+                    ) : (
+                      <span className="text-gray-500">-</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <span className={transaction.type === 'income' ? 'text-green-400' : 'text-red-400'}>
-                      {transaction.type === 'income' ? '+' : '-'}{transaction.amount.toLocaleString('tr-TR')} ₺
+                    <span className={(transaction.type === 'income' || transaction.type === 'gelir') ? 'text-green-400' : 'text-red-400'}>
+                      {(transaction.type === 'income' || transaction.type === 'gelir') ? '+' : '-'}{transaction.amount.toLocaleString('tr-TR')} ₺
                     </span>
                   </td>
                 </tr>

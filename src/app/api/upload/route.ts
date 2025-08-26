@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
+import { writeFile, mkdir } from 'fs/promises'
+import { join, dirname } from 'path'
+import { existsSync } from 'fs'
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,15 +18,29 @@ export async function POST(request: NextRequest) {
     // Unique filename oluştur
     const timestamp = Date.now()
     const filename = `${timestamp}-${file.name}`
-    const path = join(process.cwd(), 'public/uploads', filename)
+    
+    // Environment'a göre upload directory belirle
+    const uploadDir = process.env.UPLOAD_DIR || join(process.cwd(), 'public/uploads')
+    const fullPath = join(uploadDir, filename)
+    
+    // Klasör yoksa oluştur
+    const dirPath = dirname(fullPath)
+    if (!existsSync(dirPath)) {
+      await mkdir(dirPath, { recursive: true })
+    }
 
-    await writeFile(path, buffer)
+    await writeFile(fullPath, buffer)
+
+    // URL'i environment'a göre ayarla
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? `/uploads/${filename}`  // VPS'te nginx uploads klasörünü serve edecek
+      : `/uploads/${filename}`  // Local'de public/uploads
 
     return NextResponse.json({ 
       message: 'File uploaded successfully',
       filename: filename,
-      path: `/uploads/${filename}`,
-      url: `/uploads/${filename}`
+      path: fullPath,
+      url: baseUrl
     })
   } catch (error) {
     console.error('File upload error:', error)
