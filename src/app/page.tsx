@@ -5,6 +5,9 @@ import { useApp } from '@/contexts/AppContext'
 import { useRouter } from 'next/navigation'
 import { Search, X } from 'lucide-react'
 
+// Force dynamic rendering - statik generation'ı engelle
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   const { products, isLoading } = useApp()
   
