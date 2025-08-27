@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PWA İkon Oluşturucu</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .canvas-container { margin: 20px 0; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .icon-preview { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>🎨 Çanta Management PWA İkonları</h1>
+    
+    <div class="canvas-container">
+        <h3>İkon Önizleme:</h3>
+        <canvas id="icon192" width="192" height="192"></canvas>
+        <canvas id="icon512" width="512" height="512"></canvas>
+    </div>
+    
+    <div>
+        <button onclick="createIcons()">İkonları Oluştur</button>
+        <button onclick="downloadIcon('icon192', 'icon-192x192.png')">192x192 İndir</button>
+        <button onclick="downloadIcon('icon512', 'icon-512x512.png')">512x512 İndir</button>
+    </div>
+
+    <script>
+        function createIcons() {
+            // 192x192 ikon
+            const canvas192 = document.getElementById('icon192');
+            const ctx192 = canvas192.getContext('2d');
+            drawIcon(ctx192, 192);
+            
+            // 512x512 ikon
+            const canvas512 = document.getElementById('icon512');
+            const ctx512 = canvas512.getContext('2d');
+            drawIcon(ctx512, 512);
+        }
+        
+        function drawIcon(ctx, size) {
+            // Arka plan gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#4f46e5');
+            gradient.addColorStop(1, '#7c3aed');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Beyaz çanta ikonu
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = size * 0.02;
+            
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const iconSize = size * 0.6;
+            
+            // Çanta gövdesi
+            const bagWidth = iconSize * 0.7;
+            const bagHeight = iconSize * 0.5;
+            const bagX = centerX - bagWidth / 2;
+            const bagY = centerY - bagHeight / 4;
+            
+            ctx.fillRect(bagX, bagY, bagWidth, bagHeight);
+            
+            // Çanta sapları
+            const handleWidth = iconSize * 0.15;
+            const handleHeight = iconSize * 0.25;
+            
+            // Sol sap
+            ctx.strokeRect(bagX - handleWidth, bagY - handleHeight / 2, handleWidth, handleHeight);
+            
+            // Sağ sap
+            ctx.strokeRect(bagX + bagWidth, bagY - handleHeight / 2, handleWidth, handleHeight);
+            
+            // Barkod çizgileri
+            ctx.fillStyle = '#ffffff';
+            const lineWidth = size * 0.015;
+            const lineSpacing = size * 0.025;
+            const linesY = bagY + bagHeight * 0.3;
+            const linesHeight = bagHeight * 0.4;
+            
+            for (let i = 0; i < 8; i++) {
+                const lineX = bagX + bagWidth * 0.15 + i * lineSpacing;
+                const currentLineWidth = i % 2 === 0 ? lineWidth : lineWidth * 0.6;
+                ctx.fillRect(lineX, linesY, currentLineWidth, linesHeight);
+            }
+        }
+        
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Sayfa yüklendiğinde ikonları oluştur
+        window.onload = createIcons;
+    </script>
+</body>
+</html>
