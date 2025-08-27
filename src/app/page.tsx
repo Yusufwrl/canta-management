@@ -1,12 +1,9 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useApp } from '@/contexts/AppContext'
 import { useRouter } from 'next/navigation'
 import { Search, X } from 'lucide-react'
-
-// Force dynamic rendering - statik generation'ı engelle
-export const dynamic = 'force-dynamic'
 
 export default function Home() {
   const { products, isLoading } = useApp()
@@ -15,7 +12,13 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [showResults, setShowResults] = useState(false)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
+
+  // Client-side mounting için
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Real-time arama - her karakter yazıldığında çalışır
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +49,15 @@ export default function Home() {
 
   const goToProduct = (productId: string) => {
     router.push(`/products?highlight=${productId}`)
+  }
+
+  // Server-side rendering'de boş döndür, client-side'da gerçek içeriği göster
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg text-gray-300">Sayfa yükleniyor...</div>
+      </div>
+    )
   }
 
   if (isLoading) {
