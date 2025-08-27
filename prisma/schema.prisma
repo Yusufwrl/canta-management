@@ -23,6 +23,7 @@ model Product {
   salePrice           Float    // Satış fiyatı
   suggestedSalePrice  Float?   // Önerilen satış fiyatı
   images              String?  // Resim dosya yolları (JSON string olarak)
+  barcode             String?  // Barkod (opsiyonel)
   inStock             Boolean  @default(true)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt

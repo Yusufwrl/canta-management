@@ -1,14 +1,44 @@
-﻿import type { Metadata } from "next"
+﻿import type { Metadata, Viewport } from "next"
 import { Geist } from "next/font/google"
 import Link from "next/link"
 import { AppProvider } from "@/contexts/AppContext"
+import { PWABanner, PWAInstallPrompt } from "@/components/PWABanner"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Çanta Yönetim Paneli",
-  description: "Butik çantacı yönetim sistemi",
+  title: "Çanta Yönetim Sistemi",
+  description: "Çanta mağazası için envanter yönetimi ve satış takip sistemi",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Çanta Yönetimi",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Çanta Yönetim Sistemi",
+    title: "Çanta Yönetim Sistemi",
+    description: "Çanta mağazası için envanter yönetimi ve satış takip sistemi",
+  },
+  twitter: {
+    card: "summary",
+    title: "Çanta Yönetim Sistemi",
+    description: "Çanta mağazası için envanter yönetimi ve satış takip sistemi",
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: "#1f2937",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 }
 
 export default function RootLayout({
@@ -18,6 +48,33 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr" suppressHydrationWarning>
+      <head>
+        {/* PWA Meta Tags */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1f2937" />
+        
+        {/* Apple PWA Meta Tags */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Çanta Yönetimi" />
+        
+        {/* Apple Touch Icons */}
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />
+        
+        {/* Microsoft Tile */}
+        <meta name="msapplication-TileColor" content="#1f2937" />
+        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
+        
+        {/* Prevent zoom on iOS */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+      </head>
       <head>
         <meta charSet="utf-8" />
       </head>
@@ -46,6 +103,9 @@ export default function RootLayout({
                   </Link>
                   <Link href="/products/add" className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
                     Ürün Ekle
+                  </Link>
+                  <Link href="/barcode-scanner" className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                    📷 Barkod
                   </Link>
                 </div>
               </nav>
@@ -93,6 +153,11 @@ export default function RootLayout({
                       Ürün Ekle
                     </Link>
                   </li>
+                  <li>
+                    <Link href="/barcode-scanner" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-300 hover:text-white hover:bg-gray-700">
+                      Barkod Tarayıcı
+                    </Link>
+                  </li>
                 </ul>
               </nav>
             </div>
@@ -103,6 +168,10 @@ export default function RootLayout({
               </div>
             </main>
           </div>
+          
+          {/* PWA Components */}
+          <PWABanner />
+          <PWAInstallPrompt />
         </AppProvider>
       </body>
     </html>

@@ -5,13 +5,14 @@
   brand: string;
   color: string;
   category: 'sirt-cantasi' | 'okul-cantasi' | 'el-cantasi' | 'laptop-cantasi' | 'diger';
-  model: string;
+  model?: string; // Optional yapıldı
   description?: string;
   purchasePrice: number; // Alış fiyatı
   salePrice: number; // Satış fiyatı
   suggestedSalePrice?: number; // Önerilen satış fiyatı
   images: string[]; // Resim dosya yolları
   inStock: boolean;
+  barcode?: string; // Barkod alanı eklendi
   createdAt: Date;
   updatedAt: Date;
 }

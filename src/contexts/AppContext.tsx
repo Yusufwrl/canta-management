@@ -1,33 +1,9 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { Product, Transaction } from '@/types'
 
-interface Product {
-  id: string
-  code: string
-  name: string
-  brand: string
-  color: string
-  category: string
-  model: string
-  description?: string
-  purchasePrice: number
-  salePrice: number
-  suggestedSalePrice?: number
-  images: string[]
-  inStock: boolean
-  createdAt: string
-  updatedAt: string
-}
-
-interface Transaction {
-  id: string
-  type: string
-  amount: number
-  description: string
-  category?: string
-  productId?: string
-  date: string
+interface TransactionWithProduct extends Transaction {
   product?: Product
 }
 
@@ -271,7 +247,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
   const monthlyIncome = transactions
-    .filter(t => (t.type === 'income' || t.type === 'gelir') && new Date(t.date) >= thirtyDaysAgo)
+    .filter(t => t.type === 'gelir' && new Date(t.date) >= thirtyDaysAgo)
     .reduce((sum, t) => sum + t.amount, 0)
 
   // İlk yükleme - her zaman API'den fresh data çek
