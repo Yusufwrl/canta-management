@@ -17,7 +17,7 @@ model Product {
   brand               String
   color               String
   category            String   // 'sirt-cantasi' | 'okul-cantasi' | 'el-cantasi' | 'laptop-cantasi' | 'diger'
-  model               String
+  model               String?
   description         String?
   purchasePrice       Float    // Alış fiyatı
   salePrice           Float    // Satış fiyatı

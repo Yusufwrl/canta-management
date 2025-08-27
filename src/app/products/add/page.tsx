@@ -191,15 +191,14 @@ export default function AddProductPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-300">
-                Model *
+                Model
               </label>
               <input
                 type="text"
-                required
                 value={form.model}
                 onChange={(e) => updateForm('model', e.target.value)}
                 className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2 border"
-                placeholder="Örn: Classic 2024"
+                placeholder="Örn: Classic 2024 (opsiyonel)"
               />
             </div>
           </div>
