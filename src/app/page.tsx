@@ -7,8 +7,8 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    // Ana sayfayı search sayfasına yönlendir
-    router.replace('/search')
+    // Ana sayfayı transactions sayfasına yönlendir
+    router.replace('/transactions')
   }, [router])
 
   return (

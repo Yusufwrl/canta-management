@@ -8,27 +8,27 @@ import "./globals.css"
 const geist = Geist({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Çanta Yönetim Sistemi",
-  description: "Çanta mağazası için envanter yönetimi ve satış takip sistemi",
+  title: "Gelir Gider Takip",
+  description: "Basit gelir gider takip sistemi",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Çanta Yönetimi",
+    title: "Gelir Gider",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "Çanta Yönetim Sistemi",
-    title: "Çanta Yönetim Sistemi",
-    description: "Çanta mağazası için envanter yönetimi ve satış takip sistemi",
+    siteName: "Gelir Gider Takip",
+    title: "Gelir Gider Takip",
+    description: "Basit gelir gider takip sistemi",
   },
   twitter: {
     card: "summary",
-    title: "Çanta Yönetim Sistemi",
-    description: "Çanta mağazası için envanter yönetimi ve satış takip sistemi",
+    title: "Gelir Gider Takip",
+    description: "Basit gelir gider takip sistemi",
   },
 }
 
@@ -56,7 +56,7 @@ export default function RootLayout({
         {/* Apple PWA Meta Tags */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Çanta Yönetimi" />
+        <meta name="apple-mobile-web-app-title" content="Gelir Gider" />
         
         {/* Apple Touch Icons */}
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
@@ -82,27 +82,15 @@ export default function RootLayout({
             {/* Mobile Header - Fixed */}
             <div className="bg-gray-800 p-4 sticky top-0 z-10">
               <h1 className="text-xl font-bold text-white text-center">
-                Çanta Yönetimi
+                💰 Gelir Gider Takip
               </h1>
               <nav className="mt-4">
                 <div className="flex flex-wrap gap-2 justify-center">
-                  <Link href="/" className="bg-gray-700 text-white px-3 py-1 rounded text-sm hover:bg-gray-600">
-                    Ana Sayfa
+                  <Link href="/transactions" className="bg-green-600 text-white px-3 py-2 rounded text-sm hover:bg-green-700 flex-1 text-center">
+                    💳 Gelir-Gider
                   </Link>
-                  <Link href="/products" className="bg-gray-700 text-white px-3 py-1 rounded text-sm hover:bg-gray-600">
-                    Ürünler
-                  </Link>
-                  <Link href="/categories" className="bg-gray-700 text-white px-3 py-1 rounded text-sm hover:bg-gray-600">
-                    Kategoriler
-                  </Link>
-                  <Link href="/transactions" className="bg-gray-700 text-white px-3 py-1 rounded text-sm hover:bg-gray-600">
-                    Gelir-Gider
-                  </Link>
-                  <Link href="/products/add" className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
-                    Ürün Ekle
-                  </Link>
-                  <Link href="/barcode-scanner" className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
-                    📷 Barkod
+                  <Link href="/finans" className="bg-blue-600 text-white px-3 py-2 rounded text-sm hover:bg-blue-700 flex-1 text-center">
+                    📊 Finans
                   </Link>
                 </div>
               </nav>
@@ -120,39 +108,19 @@ export default function RootLayout({
             <div className="h-full w-64 flex-col bg-gray-800">
               <div className="flex h-16 shrink-0 items-center px-6">
                 <h1 className="text-xl font-bold text-white">
-                  Çanta Yönetimi
+                  💰 Gelir Gider Takip
                 </h1>
               </div>
               <nav className="flex flex-1 flex-col px-6 py-4">
                 <ul className="flex flex-1 flex-col gap-y-1">
                   <li>
-                    <Link href="/" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-300 hover:text-white hover:bg-gray-700">
-                      Ana Sayfa
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/products" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-300 hover:text-white hover:bg-gray-700">
-                      Ürünler
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/categories" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-300 hover:text-white hover:bg-gray-700">
-                      Kategoriler
-                    </Link>
-                  </li>
-                  <li>
                     <Link href="/transactions" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-300 hover:text-white hover:bg-gray-700">
-                      Gelir-Gider
+                      💳 Gelir-Gider
                     </Link>
                   </li>
                   <li>
-                    <Link href="/products/add" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-300 hover:text-white hover:bg-gray-700">
-                      Ürün Ekle
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/barcode-scanner" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-300 hover:text-white hover:bg-gray-700">
-                      Barkod Tarayıcı
+                    <Link href="/finans" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-300 hover:text-white hover:bg-gray-700">
+                      📊 Finans
                     </Link>
                   </li>
                 </ul>

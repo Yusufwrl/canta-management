@@ -4,12 +4,19 @@ import { prisma } from '@/lib/prisma'
 export async function GET() {
   try {
     const transactions = await prisma.transaction.findMany({
-      include: {
-        product: true
-      },
       orderBy: { date: 'desc' }
     })
-    return NextResponse.json(transactions)
+    
+    // Frontend için format dönüştür
+    const formattedTransactions = transactions.map(transaction => ({
+      id: transaction.id,
+      type: transaction.type === 'gelir' ? 'income' : 'expense',
+      amount: transaction.amount,
+      description: transaction.description,
+      date: transaction.date.toISOString()
+    }))
+    
+    return NextResponse.json(formattedTransactions)
   } catch (error) {
     console.error('Transactions fetch error:', error)
     return NextResponse.json({ error: 'Failed to fetch transactions' }, { status: 500 })
@@ -22,19 +29,21 @@ export async function POST(request: NextRequest) {
     
     const transaction = await prisma.transaction.create({
       data: {
-        type: body.type === 'income' ? 'gelir' : 'gider', // Veritabanında Türkçe tipleri kullan
+        type: body.type === 'income' ? 'gelir' : 'gider',
         amount: parseFloat(body.amount),
         description: body.description,
-        category: body.category,
-        productId: body.productId || null,
+        category: body.category || 'Genel',
         date: body.date ? new Date(body.date) : new Date()
-      },
-      include: {
-        product: true
       }
     })
     
-    return NextResponse.json(transaction, { status: 201 })
+    return NextResponse.json({
+      id: transaction.id,
+      type: transaction.type === 'gelir' ? 'income' : 'expense',
+      amount: transaction.amount,
+      description: transaction.description,
+      date: transaction.date.toISOString()
+    }, { status: 201 })
   } catch (error) {
     console.error('Transaction creation error:', error)
     return NextResponse.json({ error: 'Failed to create transaction' }, { status: 500 })
