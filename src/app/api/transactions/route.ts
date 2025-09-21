@@ -4,7 +4,10 @@ import { prisma } from '@/lib/prisma'
 export async function GET() {
   try {
     const transactions = await prisma.transaction.findMany({
-      orderBy: { date: 'desc' }
+      orderBy: [
+        { date: 'desc' },        // Önce tarihe göre (yeni tarihler üstte)
+        { createdAt: 'desc' }    // Sonra aynı gün içinde oluşturulma zamanına göre (yeni işlemler üstte)
+      ]
     })
     
     // Frontend için format dönüştür
