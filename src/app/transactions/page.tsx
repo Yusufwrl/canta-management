@@ -20,7 +20,8 @@ export default function TransactionsPage() {
   const [formData, setFormData] = useState({
     type: 'income' as 'income' | 'expense',
     amount: '',
-    description: ''
+    description: '',
+    date: new Date().toISOString().split('T')[0] // Bugünün tarihi YYYY-MM-DD formatında
   })
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export default function TransactionsPage() {
         type: formData.type,
         amount: parseFloat(formData.amount),
         description: formData.description,
-        date: new Date().toISOString()
+        date: new Date(formData.date + 'T12:00:00.000Z').toISOString() // Seçilen tarihi kullan, öğlen saati ile
       }
 
       if (editingTransaction) {
@@ -90,7 +91,12 @@ export default function TransactionsPage() {
         }
       }
 
-      setFormData({ type: 'income', amount: '', description: '' })
+      setFormData({ 
+        type: 'income', 
+        amount: '', 
+        description: '', 
+        date: new Date().toISOString().split('T')[0] 
+      })
     } catch (error) {
       console.error('İşlem kaydedilirken hata:', error)
     }
@@ -101,7 +107,8 @@ export default function TransactionsPage() {
     setFormData({
       type: transaction.type,
       amount: transaction.amount.toString(),
-      description: transaction.description
+      description: transaction.description,
+      date: new Date(transaction.date).toISOString().split('T')[0]
     })
     setShowAddForm(true)
   }
@@ -123,7 +130,12 @@ export default function TransactionsPage() {
   }
 
   const resetForm = () => {
-    setFormData({ type: 'income', amount: '', description: '' })
+    setFormData({ 
+      type: 'income', 
+      amount: '', 
+      description: '', 
+      date: new Date().toISOString().split('T')[0] 
+    })
     setEditingTransaction(null)
     setShowAddForm(false)
   }
@@ -241,6 +253,43 @@ export default function TransactionsPage() {
                   placeholder="İşlem açıklaması"
                   required
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Tarih</label>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentDate = new Date(formData.date)
+                      currentDate.setDate(currentDate.getDate() - 1)
+                      setFormData({...formData, date: currentDate.toISOString().split('T')[0]})
+                    }}
+                    className="px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors"
+                    title="Bir gün geri"
+                  >
+                    ⬅️
+                  </button>
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    className="flex-1 rounded-md bg-gray-700 border-gray-600 text-gray-100 px-3 py-2 border focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentDate = new Date(formData.date)
+                      currentDate.setDate(currentDate.getDate() + 1)
+                      setFormData({...formData, date: currentDate.toISOString().split('T')[0]})
+                    }}
+                    className="px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors"
+                    title="Bir gün ileri"
+                  >
+                    ➡️
+                  </button>
+                </div>
               </div>
               
               <div className="flex justify-end space-x-3">
